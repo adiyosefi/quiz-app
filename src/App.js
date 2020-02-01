@@ -1,38 +1,41 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import { QUESTIONS } from "./questions";
 
 
 const Answer = ({ answer, currentQuestion, setQuestions, questions, question, userAnswers, setUserAnswers }) => {
 
+    //galgul: change the state of the user answers
     const handleAnswerChange = (e) => {
-        // setQuestions(questions.map((q, i) => {
-        //     if (q.id === currentQuestion){
-        //         q.user_ans_index = e.target.value;
-        //     }
-        // }));
-        // (userAnswers.map((userAnswer, index) => {
-        //     if (question[currentQuestion]) {
-        //         userAnswer = e.target.value;
-        //     }
-        // }));
-
+        console.log("handleAnswerChange" , e.target.value);
         console.log(userAnswers);
+        let tempUserAnswers = userAnswers;
+        tempUserAnswers[currentQuestion] = e.target.value;
+        setUserAnswers(tempUserAnswers);
+        console.log(userAnswers);
+
     }
-
-
+    
+    //galgul:                    checked={userAnswers[currentQuestion] ? userAnswers[currentQuestion] == answer.ans_id : null}
+    //if there is any prev user selection, and if the current radio index == the prev user answer: check the radio!
     return (
         <div>
-            <input name={question.question_content} type="radio" id={answer.ans_content} value={answer.ans_id}
-                   onChange={e => handleAnswerChange(e)}/>
-            <label htmlFor={answer.ans_content}>{answer.ans_content}</label>
+            <input name={question.question_content} type="radio" id={answer.ans_content} value={answer.ans_id} 
+                   onChange={e => handleAnswerChange(e)}
+                   checked={userAnswers[currentQuestion] ? userAnswers[currentQuestion] == answer.ans_id : null}
+                />
+            <label htmlFor={answer.ans_content}>{answer.ans_content}             
+            </label>
         </div>
     );
 };
 
 
 const RenderAnswers = ({ answers, currentQuestion, setQuestions, questions, question, userAnswers, setUserAnswers}) => {
-
+    //test:
+    // useEffect(() => {
+    //     console.log("log from RenderAnswers: userAnswers: ", userAnswers)
+    // })
     const renderAnswers = answers.map((answer, index) => {
         return (
             <li key={answer.ans_id}>
@@ -57,7 +60,7 @@ const RenderAnswers = ({ answers, currentQuestion, setQuestions, questions, ques
 };
 
 const Question = ({ questions, currentQuestion, setQuestions, setCurrentQuestion, userAnswers, setUserAnswers }) => {
-
+    
     const questionItem = questions.map((question, index) => {
         if (question.id === currentQuestion) {
             return (
