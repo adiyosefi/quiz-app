@@ -4,6 +4,7 @@ import { QUESTIONS } from "./questions";
 
 
 const Answer = ({ answer, currentQuestion, setQuestions, questions, question, userAnswers, setUserAnswers }) => {
+    const [answerValue, setAnswerValue] = useState(answer.ans_id);
 
     //galgul: change the state of the user answers
     const handleAnswerChange = (e) => {
@@ -15,16 +16,16 @@ const Answer = ({ answer, currentQuestion, setQuestions, questions, question, us
         console.log(userAnswers);
 
     }
-    
+
     //galgul:                    checked={userAnswers[currentQuestion] ? userAnswers[currentQuestion] == answer.ans_id : null}
     //if there is any prev user selection, and if the current radio index == the prev user answer: check the radio!
     return (
-        <div>
-            <input name={question.question_content} type="radio" id={answer.ans_content} value={answer.ans_id} 
+        <div className="answerItem">
+            <input name={question.question_content} type="radio" id={answer.ans_content} value={answer.ans_id}
                    onChange={e => handleAnswerChange(e)}
                    checked={userAnswers[currentQuestion] ? userAnswers[currentQuestion] == answer.ans_id : null}
-                />
-            <label htmlFor={answer.ans_content}>{answer.ans_content}             
+            />
+            <label className="answerLabel" htmlFor={answer.ans_content}>{answer.ans_content}
             </label>
         </div>
     );
@@ -36,6 +37,7 @@ const RenderAnswers = ({ answers, currentQuestion, setQuestions, questions, ques
     // useEffect(() => {
     //     console.log("log from RenderAnswers: userAnswers: ", userAnswers)
     // })
+
     const renderAnswers = answers.map((answer, index) => {
         return (
             <li key={answer.ans_id}>
@@ -47,9 +49,7 @@ const RenderAnswers = ({ answers, currentQuestion, setQuestions, questions, ques
     if (answers != null) {
         return (
             <div>
-                <form>
                 {renderAnswers}
-                </form>
             </div>
         );
     } else {
@@ -60,19 +60,19 @@ const RenderAnswers = ({ answers, currentQuestion, setQuestions, questions, ques
 };
 
 const Question = ({ questions, currentQuestion, setQuestions, setCurrentQuestion, userAnswers, setUserAnswers }) => {
-    
+
     const questionItem = questions.map((question, index) => {
         if (question.id === currentQuestion) {
             return (
                 <div key={question.id}>
-                    <div>
+                    <div className="questionTitle">
                         <h4>{question.question_content}</h4>
                     </div>
-                        <ul>
-                            <RenderAnswers answers={question.answers} currentQuestion={currentQuestion} question={question}
-                                           userAnswers={userAnswers} setQuestions={setQuestions} questions={questions}
-                                           setUserAnswers={setUserAnswers}/>
-                        </ul>
+                    <ul className="answersList">
+                        <RenderAnswers answers={question.answers} currentQuestion={currentQuestion} question={question}
+                                       userAnswers={userAnswers} setQuestions={setQuestions} questions={questions}
+                                       setUserAnswers={setUserAnswers}/>
+                    </ul>
                 </div>
             );
         }
@@ -104,11 +104,11 @@ const PrevButton = ({ questions , currentQuestion, setCurrentQuestion }) => {
 
     if (currentQuestion >= 0 && currentQuestion <= questions.length-1) {
         return (
-            <button type="button" disabled={currentQuestion === 0 ? true : false} onClick={goToPrev}>Prev</button>
+            <button className="prevButton" type="button" disabled={currentQuestion === 0 ? true : false} onClick={goToPrev}>Prev</button>
         );
     }
 
-}
+};
 
 const NextButton = ({ questions , currentQuestion, setCurrentQuestion }) => {
     const goToNext = () => {
@@ -119,16 +119,31 @@ const NextButton = ({ questions , currentQuestion, setCurrentQuestion }) => {
 
     if (currentQuestion >= 0 && currentQuestion <= questions.length-1) {
         return (
-            <button type="button" disabled={currentQuestion === questions.length-1 ? true : false} onClick={goToNext}>Next</button>
+            <button className="nextButton" type="button" disabled={currentQuestion === questions.length-1 ? true : false} onClick={goToNext}>Next</button>
         );
     }
 
-}
+};
 
 const DoneButton = ({ questions , currentQuestion, setCurrentQuestion }) => {
     if (currentQuestion === questions.length-1) {
         return (
-            <button type="submit">Done</button>
+            <span>
+            <input className="doneButton" type="submit" value="Done"/>
+            </span>
+        );
+    }
+    return (
+        <span></span>
+    );
+}
+
+const ResetButton = ({ questions , currentQuestion, setCurrentQuestion, handleReset }) => {
+    if (currentQuestion === questions.length-1) {
+        return (
+            <span>
+            <input className="resetButton" type="reset" value="Reset" onClick={handleReset}/>
+            </span>
         );
     }
     return (
@@ -143,34 +158,57 @@ function App() {
 
     const [userAnswers, setUserAnswers] = useState( [] );
 
+    const [userGrade, setUserGrade] = useState(null);
+
 
     const handleClick = () => {
-        if (userAnswers[currentQuestion] != null) {
-            setQuestions([
-                ...questions,
-                questions[currentQuestion].user_ans_index=userAnswers[currentQuestion]
-            ]);
-            setUserAnswers([]);
+        if (userAnswers.length == questions.length) {
+            setUserGrade(0);
+            let tempUserGrade = 0;
+            for (let i=0 ; i<userAnswers.length ; i++){
+                if (userAnswers[i] == questions[i].correct_ans_index){
+                    setUserGrade( tempUserGrade += (100/questions.length));
+                }
+            }
         }
     };
 
+
+    let renderUserGrade;
+    if (userGrade != null){
+        renderUserGrade = <div className="userGrade">Your grade is {userGrade}!</div>;
+    }
+
+    const handleReset = () => {
+        if (userAnswers.length == questions.length) {
+            setUserGrade(0);
+            setUserAnswers([]);
+            setUserGrade(null);
+        }
+    };
+
+
     return (
         <div className="container">
-            <div>
+            <div className="quizTitle">
                 <h1>Quiz Time!</h1>
             </div>
-            {/*<form onSubmit={(e) => {*/}
-            {/*    e.preventDefault();*/}
-            {/*    handleClick();*/}
-            {/*}}>*/}
-            <Question questions={questions} currentQuestion={currentQuestion} setQuestions={setQuestions}
-                      setCurrentQuestion={setCurrentQuestion} userAnswers={userAnswers} setUserAnswers={setUserAnswers}/>
-            <div>
-                <PrevButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
-                <NextButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
-                <DoneButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
-            </div>
-            {/*</form>*/}
+            <form className="quizForm" onSubmit={(e) => {
+                e.preventDefault();
+                handleClick();
+            }}>
+                <Question questions={questions} currentQuestion={currentQuestion} setQuestions={setQuestions}
+                          setCurrentQuestion={setCurrentQuestion} userAnswers={userAnswers} setUserAnswers={setUserAnswers}/>
+                <div className="mainButtons">
+                    <PrevButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
+                    <NextButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
+                </div>
+                <div className="lastButtons">
+                    <DoneButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
+                    <ResetButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion} handleReset={handleReset}/>
+                </div>
+            </form>
+            {renderUserGrade}
         </div>
     );
 }

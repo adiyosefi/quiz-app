@@ -1,5 +1,97 @@
+
+
 .container {
   text-align: center;
+  background-color: #371e6f;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Varela Round', sans-serif;
 }
 
+.quizTitle {
+  background-color: rgba(77, 42, 221, 0.61);
+  width: 400px;
+  border-radius: 50px;
+  color: white;
+}
 
+.quizForm {
+  background-color: rgba(77, 42, 221, 0.61);
+  margin: 20px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  width: 400px;
+  border-radius: 50px;
+  color: white;
+}
+
+.questionTitle {
+  margin-bottom: 40px;
+}
+
+.answersList {
+  list-style: none;
+  padding-left: 0;
+}
+
+.answerItem {
+  margin-bottom: 20px;
+}
+
+.answerItem:hover {
+  color: #a581ff;
+}
+
+.answerLabel {
+  margin-left: 10px;
+}
+
+.mainButtons {
+  margin-top: 40px;
+}
+
+.prevButton {
+  margin-right: 100px;
+}
+
+.prevButton, .nextButton, .resetButton, .doneButton {
+  padding: 5px 10px;
+  border-radius: 50px;
+  border-style: none;
+  background-color: rgba(217, 176, 255, 0.58);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.prevButton:focus, .nextButton:focus, .resetButton:focus, .doneButton:focus {
+   outline: none;
+ }
+
+.prevButton:hover, .nextButton:hover, .resetButton:hover, .doneButton:hover {
+  background-color: rgba(232, 206, 255, 0.58);
+}
+
+.nextButton {
+
+}
+
+.lastButtons {
+  margin-top: 10px;
+}
+
+.doneButton {
+  position: fixed;
+}
+
+.resetButton {
+  float: right;
+  margin-right: 20px;
+}
+
+.userGrade {
+  color: white;
+}
