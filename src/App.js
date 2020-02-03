@@ -184,6 +184,7 @@ function App() {
             setUserGrade(0);
             setUserAnswers([]);
             setUserGrade(null);
+            setCurrentQuestion(0);
         }
     };
 
