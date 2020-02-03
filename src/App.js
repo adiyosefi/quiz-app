@@ -193,15 +193,17 @@ function App() {
             <div className="quizTitle">
                 <h1>Quiz Time!</h1>
             </div>
-            <form className="quizForm" onSubmit={(e) => {
+            <form onSubmit={(e) => {
                 e.preventDefault();
                 handleClick();
             }}>
+                <div className="quizForm">
                 <Question questions={questions} currentQuestion={currentQuestion} setQuestions={setQuestions}
                           setCurrentQuestion={setCurrentQuestion} userAnswers={userAnswers} setUserAnswers={setUserAnswers}/>
                 <div className="mainButtons">
                     <PrevButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
                     <NextButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
+                </div>
                 </div>
                 <div className="lastButtons">
                     <DoneButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
