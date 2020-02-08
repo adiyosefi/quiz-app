@@ -187,7 +187,7 @@ function App() {
     return (
         <div className="container">
             <div className="quizTitle">
-                <h1>Quiz Time!</h1>
+                <h1><img className="logoQuiz" src="quiz-icon.png"/>Quiz Time!<img className="logoQuiz" src="quiz-icon.png"/></h1>
             </div>
             <form onSubmit={(e) => {
                 e.preventDefault();

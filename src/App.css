@@ -21,6 +21,12 @@
   color: white;
 }
 
+.logoQuiz {
+  height: 40px;
+  width: 40px;
+  margin: 0px 25px;
+}
+
 .quizForm {
   background-color: rgba(77, 42, 221, 0.61);
   margin: 20px;
