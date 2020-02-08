@@ -3,21 +3,20 @@ import './App.css';
 import { QUESTIONS } from "./questions";
 
 
-const Answer = ({ answer, currentQuestion, setQuestions, questions, question, userAnswers, setUserAnswers }) => {
+const Answer = ({ answer, currentQuestion, question, userAnswers, setUserAnswers }) => {
     const [answerValue, setAnswerValue] = useState(answer.ans_id);
 
-    //galgul: change the state of the user answers
+    // change the state of the user answers
     const handleAnswerChange = (e) => {
         console.log("handleAnswerChange" , e.target.value);
         console.log(userAnswers);
-        let tempUserAnswers = userAnswers;
+        let tempUserAnswers = [...userAnswers];
         tempUserAnswers[currentQuestion] = e.target.value;
         setUserAnswers(tempUserAnswers);
         console.log(userAnswers);
 
     }
 
-    //galgul:                    checked={userAnswers[currentQuestion] ? userAnswers[currentQuestion] == answer.ans_id : null}
     //if there is any prev user selection, and if the current radio index == the prev user answer: check the radio!
     return (
         <div className="answerItem">
@@ -27,16 +26,15 @@ const Answer = ({ answer, currentQuestion, setQuestions, questions, question, us
             />
             <label className="answerLabel" htmlFor={answer.ans_content}>{answer.ans_content}
             </label>
+            <div className="check">
+                <div className="inside"></div>
+            </div>
         </div>
     );
 };
 
 
 const RenderAnswers = ({ answers, currentQuestion, setQuestions, questions, question, userAnswers, setUserAnswers}) => {
-    //test:
-    // useEffect(() => {
-    //     console.log("log from RenderAnswers: userAnswers: ", userAnswers)
-    // })
 
     const renderAnswers = answers.map((answer, index) => {
         return (
@@ -59,7 +57,7 @@ const RenderAnswers = ({ answers, currentQuestion, setQuestions, questions, ques
     }
 };
 
-const Question = ({ questions, currentQuestion, setQuestions, setCurrentQuestion, userAnswers, setUserAnswers }) => {
+const Question = ({ questions, currentQuestion, setQuestions, userAnswers, setUserAnswers }) => {
 
     const questionItem = questions.map((question, index) => {
         if (question.id === currentQuestion) {
@@ -104,7 +102,9 @@ const PrevButton = ({ questions , currentQuestion, setCurrentQuestion }) => {
 
     if (currentQuestion >= 0 && currentQuestion <= questions.length-1) {
         return (
-            <button className="prevButton" type="button" disabled={currentQuestion === 0 ? true : false} onClick={goToPrev}>Prev</button>
+            <button className="prevButton" type="button"
+                    disabled={currentQuestion === 0 ? true : false}
+                    onClick={goToPrev}><i className="fa fa-arrow-left" aria-hidden="true"></i> Prev</button>
         );
     }
 
@@ -119,7 +119,9 @@ const NextButton = ({ questions , currentQuestion, setCurrentQuestion }) => {
 
     if (currentQuestion >= 0 && currentQuestion <= questions.length-1) {
         return (
-            <button className="nextButton" type="button" disabled={currentQuestion === questions.length-1 ? true : false} onClick={goToNext}>Next</button>
+            <button className="nextButton" type="button"
+                    disabled={currentQuestion === questions.length-1 ? true : false}
+                    onClick={goToNext}>Next <i className="fa fa-arrow-right" aria-hidden="true"></i></button>
         );
     }
 
@@ -139,15 +141,10 @@ const DoneButton = ({ questions , currentQuestion, setCurrentQuestion }) => {
 }
 
 const ResetButton = ({ questions , currentQuestion, setCurrentQuestion, handleReset }) => {
-    if (currentQuestion === questions.length-1) {
-        return (
-            <span>
+    return (
+        <span>
             <input className="resetButton" type="reset" value="Reset" onClick={handleReset}/>
             </span>
-        );
-    }
-    return (
-        <span></span>
     );
 }
 
@@ -180,12 +177,10 @@ function App() {
     }
 
     const handleReset = () => {
-        if (userAnswers.length == questions.length) {
-            setUserGrade(0);
-            setUserAnswers([]);
-            setUserGrade(null);
-            setCurrentQuestion(0);
-        }
+        setUserGrade(0);
+        setUserAnswers([]);
+        setUserGrade(null);
+        setCurrentQuestion(0);
     };
 
 
@@ -199,12 +194,14 @@ function App() {
                 handleClick();
             }}>
                 <div className="quizForm">
-                <Question questions={questions} currentQuestion={currentQuestion} setQuestions={setQuestions}
-                          setCurrentQuestion={setCurrentQuestion} userAnswers={userAnswers} setUserAnswers={setUserAnswers}/>
-                <div className="mainButtons">
-                    <PrevButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
-                    <NextButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
-                </div>
+                    <div>
+                        <Question questions={questions} currentQuestion={currentQuestion} setQuestions={setQuestions}
+                                  setCurrentQuestion={setCurrentQuestion} userAnswers={userAnswers} setUserAnswers={setUserAnswers}/>
+                    </div>
+                    <div className="mainButtons">
+                        <PrevButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
+                        <NextButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
+                    </div>
                 </div>
                 <div className="lastButtons">
                     <DoneButton questions={questions} currentQuestion={currentQuestion} setCurrentQuestion={setCurrentQuestion}/>
@@ -212,6 +209,9 @@ function App() {
                 </div>
             </form>
             {renderUserGrade}
+            <div className="signature">
+                <p> Made with <i className="fa fa-heart"></i> by Adi Nomberg</p>
+            </div>
         </div>
     );
 }
